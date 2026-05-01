@@ -1,5 +1,6 @@
 import { useEffect, useState, FC, FormEvent } from 'react';
 import { useParams } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Lock, Send, Gavel, X, FileText, Upload, TriangleAlert,
   Scale, CheckCircle2, ShieldCheck, User, ArrowLeft
@@ -32,7 +33,10 @@ const DisputeModal: FC<{ target: DisputeTarget; onClose: () => void }> = ({ targ
   if (submitted) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(13,27,42,0.8)', backdropFilter: 'blur(6px)' }}>
-        <div className="bg-[#F9F4EE] w-full max-w-md rounded-3xl shadow-2xl p-8 text-center" dir="rtl">
+        <motion.div 
+          layoutId={`dispute-btn-${target.project.id}-${target.task.id}`}
+          className="bg-[#F9F4EE] w-full max-w-md rounded-3xl shadow-2xl p-8 text-center" dir="rtl"
+        >
           <div className="w-16 h-16 rounded-full bg-[#0D1B2A] flex items-center justify-center mx-auto mb-5">
             <Scale size={30} className="text-[#C9A84C]" />
           </div>
@@ -46,14 +50,17 @@ const DisputeModal: FC<{ target: DisputeTarget; onClose: () => void }> = ({ targ
           <button onClick={onClose} className="w-full py-3 rounded-xl font-black text-white" style={{ background: '#0D1B2A' }}>
             حسناً، فهمت
           </button>
-        </div>
+        </motion.div>
       </div>
     );
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(13,27,42,0.8)', backdropFilter: 'blur(6px)' }}>
-      <div className="bg-[#F9F4EE] w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl" dir="rtl">
+      <motion.div 
+        layoutId={`dispute-btn-${target.project.id}-${target.task.id}`}
+        className="bg-[#F9F4EE] w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl" dir="rtl"
+      >
 
         <div className="bg-red-600 p-6 rounded-t-3xl flex items-start justify-between">
           <div>
@@ -231,22 +238,24 @@ const TaskRow: FC<{
 
           {/* Client: open dispute */}
           {!isPaid && !isDisputed && (userRole === 'client' || userRole === 'admin') && (
-            <button
+            <motion.button
+              layoutId={`dispute-btn-${project.id}-${t.id}`}
               onClick={() => onDispute(t)}
               className="flex items-center gap-2 text-red-600 font-bold px-4 py-2.5 rounded-xl text-sm border-2 border-red-100 bg-white hover:bg-red-50 hover:border-red-300 transition-all whitespace-nowrap"
             >
               <Gavel size={15} /> فتح نزاع
-            </button>
+            </motion.button>
           )}
 
           {/* Freelancer: open dispute */}
           {!isPaid && !isDisputed && userRole === 'freelancer' && (
-            <button
+            <motion.button
+              layoutId={`dispute-btn-${project.id}-${t.id}`}
               onClick={() => onDispute(t)}
               className="flex items-center gap-2 text-red-600 font-bold px-4 py-2.5 rounded-xl text-sm border-2 border-red-100 bg-white hover:bg-red-50 hover:border-red-300 transition-all whitespace-nowrap"
             >
               <Gavel size={15} /> فتح نزاع
-            </button>
+            </motion.button>
           )}
         </div>
       </div>
