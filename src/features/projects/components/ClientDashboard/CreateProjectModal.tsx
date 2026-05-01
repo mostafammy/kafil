@@ -62,9 +62,9 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ user, on
           layoutId="create-project-btn"
           transition={{
             type: 'spring',
-            stiffness: 180,
-            damping: 25,
-            mass: 1,
+            stiffness: 280,
+            damping: 32,
+            mass: 1.2,
           }}
           className="bg-[var(--color-kafil-cream)] w-full max-w-2xl rounded-3xl shadow-[var(--shadow-modal)] overflow-hidden pointer-events-auto origin-center"
           role="dialog"
@@ -72,10 +72,10 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ user, on
           aria-labelledby="create-project-title"
         >
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
             {/* Header */}
             <header className="bg-[var(--color-kafil-midnight)] p-6 relative">
@@ -148,13 +148,16 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ user, on
               </div>
 
               <div className="pt-2">
-                <button 
+                <motion.button 
+                  layoutId="submit-project-btn"
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
                   type="submit" 
                   disabled={createMutation.isPending || !title || !budget}
-                  className="w-full bg-[var(--color-kafil-midnight)] text-white font-black py-4 rounded-xl hover:-translate-y-0.5 transition-all shadow-[0_4px_20px_rgba(13,27,42,0.25)] flex items-center justify-center gap-2 text-lg disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-4 focus:ring-[var(--color-kafil-gold)]"
+                  className="w-full bg-[var(--color-kafil-midnight)] text-white font-black py-4 rounded-xl shadow-[0_4px_20px_rgba(13,27,42,0.25)] flex items-center justify-center gap-2 text-lg disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-4 focus:ring-[var(--color-kafil-gold)]"
                 >
                   {createMutation.isPending ? 'جاري الإيداع...' : 'إيداع في الخزنة (Escrow) وبدء المشروع'} <Plus size={20} />
-                </button>
+                </motion.button>
               </div>
             </form>
           </motion.div>

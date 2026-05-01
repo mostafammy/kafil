@@ -268,19 +268,41 @@ export default function ClientDashboard() {
         </div>
         <motion.button
           layoutId="create-project-btn"
+          whileHover={{ scale: 1.05, y: -4, boxShadow: '0 20px 40px rgba(13,27,42,0.3)' }}
+          whileTap={{ scale: 0.98 }}
           transition={{
             type: 'spring',
-            stiffness: 180,
-            damping: 25,
-            mass: 1,
+            stiffness: 280,
+            damping: 32,
+            mass: 1.2,
           }}
           onClick={() => setIsCreateModalOpen(true)}
-          className="flex shrink-0 items-center gap-2 rounded-2xl bg-[var(--color-kafil-midnight)] px-6 py-3.5 font-black text-white transition-all hover:-translate-y-0.5 hover:shadow-xl focus:ring-4 focus:ring-[var(--color-kafil-gold)] focus:outline-none"
-          style={{ boxShadow: '0 4px 20px rgba(13,27,42,0.25)' }}
+          className="flex shrink-0 items-center gap-2 rounded-2xl bg-[var(--color-kafil-midnight)] px-6 py-3.5 font-black text-white shadow-lg focus:ring-4 focus:ring-[var(--color-kafil-gold)] focus:outline-none md:flex"
         >
           <Plus size={18} aria-hidden="true" /> {tClient.createProject}
         </motion.button>
       </header>
+
+      {/* Floating Bottom Button for Mobile (Only visible on small screens) */}
+      <div className="fixed bottom-8 left-0 right-0 z-30 flex justify-center px-4 sm:hidden">
+        <motion.button
+          layoutId="create-project-btn-mobile"
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{
+            type: 'spring',
+            stiffness: 280,
+            damping: 32,
+            mass: 1.2,
+            delay: 0.5
+          }}
+          onClick={() => setIsCreateModalOpen(true)}
+          className="flex items-center gap-3 rounded-2xl bg-[var(--color-kafil-midnight)] px-8 py-4 font-black text-white shadow-[0_10px_30px_rgba(13,27,42,0.4)] focus:ring-4 focus:ring-[var(--color-kafil-gold)] focus:outline-none"
+        >
+          <Plus size={20} aria-hidden="true" /> {tClient.createProject}
+        </motion.button>
+      </div>
 
       {isLoading ? (
         // Skeleton Loading State
@@ -432,12 +454,14 @@ export default function ClientDashboard() {
                   {lang === 'ar' ? 'لا توجد مشاريع بعد.' : 'No projects yet.'}
                 </p>
                 <div className="flex flex-col items-center gap-3">
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => setIsCreateModalOpen(true)}
-                    className="font-bold text-[var(--color-kafil-midnight)] bg-[var(--color-kafil-gold)] px-6 py-2 rounded-xl shadow-lg hover:scale-105 transition-transform"
+                    className="font-black text-[var(--color-kafil-midnight)] bg-[var(--color-kafil-gold)] px-8 py-3 rounded-2xl shadow-lg focus:ring-4 focus:ring-[var(--color-kafil-gold)]/50 focus:outline-none"
                   >
                     {lang === 'ar' ? 'ابدأ بإنشاء مشروعك الأول' : 'Start by creating your first project'}
-                  </button>
+                  </motion.button>
                   <button
                     onClick={() => {
                       api.resetDb();

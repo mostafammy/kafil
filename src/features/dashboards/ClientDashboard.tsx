@@ -57,12 +57,17 @@ const ClientDashboard: FC<ClientDashboardProps> = ({
           <div className="hidden w-56 md:block">
             <DemoButton />
           </div>
-          <Link
-            to="/create"
-            className="flex items-center gap-2 rounded-xl bg-blue-900 px-6 py-3.5 font-bold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-800"
+          <motion.div
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
           >
-            إطلاق مشروع جديد <ChevronLeft size={18} />
-          </Link>
+            <Link
+              to="/create"
+              className="flex items-center gap-2 rounded-xl bg-blue-900 px-6 py-3.5 font-bold text-white shadow-lg shadow-blue-900/20 transition-colors hover:bg-blue-800"
+            >
+              إطلاق مشروع جديد <ChevronLeft size={18} />
+            </Link>
+          </motion.div>
         </div>
       </div>
 
