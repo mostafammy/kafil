@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useLayoutEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Lock, Send, Gavel, User as UserIcon, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -26,6 +26,10 @@ const ProjectDetailsView: FC = () => {
   const trans = tFull.client.projectDetails;
 
   const { project, form, modals, stats, actions } = useProjectDetails(id);
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
 
   if (!project) {
     return (

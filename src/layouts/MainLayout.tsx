@@ -244,10 +244,10 @@ const MainLayout: FC = () => {
       </motion.aside>
 
       {/* ── MAIN ── */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <main className="flex-1 flex flex-col min-w-0">
 
         {/* TOPBAR */}
-        <header className="h-18 bg-white/80 backdrop-blur-md border-b border-[#E8DDD0] flex items-center justify-between px-6 md:px-10 sticky top-0 z-10" style={{ minHeight: '72px' }}>
+        <header className="h-18 bg-white/80 backdrop-blur-md border-b border-[#E8DDD0] flex items-center justify-between px-6 md:px-10 sticky top-0 z-40" style={{ minHeight: '72px' }}>
           {/* Back Button */}
           {!location.pathname.includes('/dashboard/') && location.pathname !== '/' && location.pathname !== '/login' && location.pathname !== '/register' && (
             <div className="hidden md:block">
@@ -367,9 +367,9 @@ const MainLayout: FC = () => {
           </div>
         </header>
 
-        <div className="relative flex-1 overflow-hidden bg-[#F9F4EE]">
+        <div className="flex-1 bg-[#F9F4EE]">
           <LayoutGroup>
-            <div className="relative flex-1 h-full p-6 md:p-10 overflow-y-auto">
+            <div className="p-6 md:p-10">
               {outlet}
             </div>
           </LayoutGroup>
