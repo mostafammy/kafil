@@ -268,6 +268,12 @@ export default function ClientDashboard() {
         </div>
         <motion.button
           layoutId="create-project-btn"
+          transition={{
+            type: 'spring',
+            stiffness: 180,
+            damping: 25,
+            mass: 1,
+          }}
           onClick={() => setIsCreateModalOpen(true)}
           className="flex shrink-0 items-center gap-2 rounded-2xl bg-[var(--color-kafil-midnight)] px-6 py-3.5 font-black text-white transition-all hover:-translate-y-0.5 hover:shadow-xl focus:ring-4 focus:ring-[var(--color-kafil-gold)] focus:outline-none"
           style={{ boxShadow: '0 4px 20px rgba(13,27,42,0.25)' }}

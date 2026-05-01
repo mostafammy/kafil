@@ -40,25 +40,53 @@ const PaymentMethodsView: FC = () => {
 
   const [showAddModal, setShowAddModal] = useState(false);
 
+  // Stagger variants for the container
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { type: 'spring', stiffness: 100, damping: 15 }
+    }
+  };
+
   return (
-    <div className="animate-fade-in max-w-4xl mx-auto space-y-10" dir="rtl">
+    <motion.div 
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="max-w-4xl mx-auto space-y-10" 
+      dir="rtl"
+    >
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      <motion.div variants={itemVariants} className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <h1 className="text-3xl font-black text-[#0D1B2A] tracking-tight mb-2">وسائل الدفع</h1>
           <p className="text-gray-500 font-medium">إدارة البطاقات البنكية والحسابات المرتبطة بخزنة كفيل.</p>
         </div>
-        <button 
+        <motion.button 
+          layoutId="add-card-btn"
+          transition={{ type: 'spring', stiffness: 180, damping: 25 }}
           onClick={() => setShowAddModal(true)}
           className="flex items-center gap-2 bg-[#C9A84C] text-[#0D1B2A] font-black px-6 py-3.5 rounded-2xl shadow-lg shadow-[#C9A84C]/20 hover:scale-105 transition-all"
         >
           <Plus size={20} /> إضافة بطاقة جديدة
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
 
       <div className="grid lg:grid-cols-2 gap-10">
         {/* Left: Cards List */}
-        <div className="space-y-6">
+        <motion.div variants={itemVariants} className="space-y-6">
           <h2 className="text-xl font-bold text-[#0D1B2A] flex items-center gap-2 px-1">
             <CreditCard size={20} className="text-[#C9A84C]" /> البطاقات المسجلة
           </h2>
@@ -67,7 +95,10 @@ const PaymentMethodsView: FC = () => {
             {cards.map((card) => (
               <motion.div 
                 key={card.id}
-                layoutId={card.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ y: -5, scale: 1.02 }}
                 className={cn(
                   "relative h-56 rounded-[2.5rem] p-8 text-white shadow-2xl overflow-hidden group cursor-pointer",
                   card.color
@@ -107,10 +138,10 @@ const PaymentMethodsView: FC = () => {
               </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Right: Bank Accounts & Security */}
-        <div className="space-y-8">
+        <motion.div variants={itemVariants} className="space-y-8">
           {/* Bank Account Section */}
           <div className="bg-white rounded-[2.5rem] p-8 border border-[#E8DDD0] shadow-sm">
             <h3 className="text-lg font-black text-[#0D1B2A] mb-6 flex items-center gap-2">
@@ -151,11 +182,11 @@ const PaymentMethodsView: FC = () => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Transaction History Preview */}
-      <div className="bg-white rounded-[2.5rem] p-10 border border-[#E8DDD0] shadow-sm">
+      <motion.div variants={itemVariants} className="bg-white rounded-[2.5rem] p-10 border border-[#E8DDD0] shadow-sm">
         <div className="flex justify-between items-center mb-8">
           <h3 className="text-xl font-black text-[#0D1B2A] flex items-center gap-2">
             <Wallet size={20} className="text-[#C9A84C]" /> العمليات الأخيرة
@@ -184,9 +215,88 @@ const PaymentMethodsView: FC = () => {
             </div>
           ))}
         </div>
-      </div>
-    </div>
+      </motion.div>
+
+      {/* Add Card Modal */}
+      <AnimatePresence>
+        {showAddModal && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowAddModal(false)}
+              className="fixed inset-0 z-40 bg-[rgba(13,27,42,0.75)] backdrop-blur-sm"
+            />
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+              <motion.div 
+                layoutId="add-card-btn"
+                transition={{ type: 'spring', stiffness: 180, damping: 25 }}
+                className="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden pointer-events-auto origin-center"
+                role="dialog"
+              >
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <header className="bg-[#0D1B2A] p-8 text-white relative">
+                    <button 
+                      onClick={() => setShowAddModal(false)}
+                      className="absolute top-8 left-8 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
+                    >
+                      <Plus className="rotate-45" size={20} />
+                    </button>
+                    <h2 className="text-2xl font-black mb-1">إضافة بطاقة بنكية</h2>
+                    <p className="text-gray-400 text-sm font-medium">بياناتك محمية بتشفير من المستوى البنكي.</p>
+                  </header>
+                  
+                  <div className="p-8 space-y-6">
+                    <div className="space-y-2">
+                      <label className="text-xs font-black text-gray-400 uppercase tracking-widest px-1">رقم البطاقة</label>
+                      <input 
+                        className="w-full bg-gray-50 border border-[#E8DDD0] p-4 rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#C9A84C] transition-all outline-none font-bold text-lg"
+                        placeholder="0000 0000 0000 0000"
+                        dir="ltr"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest px-1">تاريخ الانتهاء</label>
+                        <input 
+                          className="w-full bg-gray-50 border border-[#E8DDD0] p-4 rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#C9A84C] transition-all outline-none font-bold"
+                          placeholder="MM/YY"
+                          dir="ltr"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest px-1">رمز الأمان (CVC)</label>
+                        <input 
+                          className="w-full bg-gray-50 border border-[#E8DDD0] p-4 rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#C9A84C] transition-all outline-none font-bold"
+                          placeholder="•••"
+                          type="password"
+                          dir="ltr"
+                        />
+                      </div>
+                    </div>
+
+                    <button 
+                      className="w-full bg-[#0D1B2A] text-white font-black py-5 rounded-2xl hover:-translate-y-0.5 transition-all shadow-xl flex items-center justify-center gap-2 text-lg"
+                    >
+                      <ShieldCheck size={22} className="text-[#C9A84C]" /> تأمين وحفظ البطاقة
+                    </button>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
+
 
 export default PaymentMethodsView;
