@@ -117,7 +117,10 @@ export const DemoStoryRunner: FC = () => {
   };
 
   return (
-    <div className="fixed bottom-10 right-10 z-[100]">
+    <div className="fixed bottom-10 left-10 z-[100] flex items-center gap-3">
+      <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+        <Rocket size={24} className="text-white" />
+      </div>
       <motion.div 
         layout
         className={cn(
@@ -152,7 +155,7 @@ export const DemoStoryRunner: FC = () => {
 
       {/* Progress Line */}
       {isPlaying && (
-        <div className="mt-4 w-full bg-white/10 h-1.5 rounded-full overflow-hidden border border-white/5">
+        <div className="absolute -bottom-4 left-0 right-0 h-1.5 bg-white/10 rounded-full overflow-hidden border border-white/5">
            <motion.div 
              initial={{ width: 0 }}
              animate={{ width: `${(currentStep/5) * 100}%` }}

@@ -11,6 +11,27 @@ const MOCK_CASES: Record<string, {
   aiSummary: string; evidence: string[];
   history: { date: string; event: string }[];
 }> = {
+  'task_dispute_1': {
+    title: 'نزاع تكامل بوابة الدفع — متجر كفيل',
+    category: 'Fintech Development',
+    amount: 500,
+    hoursLeft: 14,
+    requester: 'أحمد خالد (عميل)',
+    respondent: 'عمر العلي (مصمم)',
+    filedDate: '1 مايو 2026',
+    aiSummary: `فُتح هذا النزاع بواسطة "أحمد خالد" مدّعياً أن الربط مع بوابة الدفع "Stripe" لا يعمل في بيئة الإنتاج رغم عمله في بيئة الاختبار.
+    
+    يرد "عمر العلي" بأن المشكلة تكمن في مفاتيح API الخاصة بالعميل وليس في الكود البرمجي المسلم، حيث تم اختبار الكود بمفاتيح تجريبية وعمل بنجاح 100%. 
+    
+    تحليل النظام يُظهر أن الكود يحتوي على منطق الربط الصحيح، ولكن هناك خطأ في إعدادات ملف البيئة (.env) على خادم العميل.`,
+    evidence: ['payment_logs.txt', 'env_config_screenshot.png', 'chat_history.pdf'],
+    history: [
+      { date: '25 أبريل 2026', event: 'بدء العمل على المهمة' },
+      { date: '29 أبريل 2026', event: 'عمر العلي قام بتسليم الكود' },
+      { date: '30 أبريل 2026', event: 'أحمد خالد أبلغ عن فشل الدفع في الإنتاج' },
+      { date: '1 مايو 2026', event: 'فُتح النزاع للتحكيم اللامركزي' },
+    ],
+  },
   'KF-2847': {
     title: 'نزاع تصميم واجهات — مشروع E-commerce',
     category: 'UI/UX Design',
@@ -27,7 +48,7 @@ const MOCK_CASES: Record<string, {
     evidence: ['figma_link.txt', 'screenshot_dispute.png', 'chat_log_export.pdf'],
     history: [
       { date: '1 يونيو 2026', event: 'تم قبول متطلبات المرحلة 2 من الطرفين' },
-      { date: '11 يونيو 2026، 14:22', event: 'Sara A. قدّمت التسليم عبر رابط Figma' },
+      { date: '11 يونيو 2026، 14:22', event: 'Sara A. قدّمنت التسليم عبر رابط Figma' },
       { date: '12 يونيو 2026', event: 'العميلة راجعت الملفات' },
       { date: '13 يونيو 2026، 09:10', event: 'فُتح النزاع من قِبَل Layla M.' },
     ],
@@ -59,10 +80,10 @@ export default function ArbitratorCaseView() {
   const [vote, setVote] = useState<VoteChoice>(null);
   const [partialPct, setPartialPct] = useState(50);
   const [submitted, setSubmitted] = useState(false);
-  const [showSummary, setShowSummary] = useState(false);
+  const [showSummary, setShowSummary] = useState(true);
 
   const userStr = localStorage.getItem('user');
-  const currentUser = userStr ? JSON.parse(userStr) : { role: 'guest', name: 'Guest' };
+  const currentUser = userStr ? JSON.parse(userStr) : { role: 'guest', name: 'Guest', id: '0' };
 
   const c = caseId ? MOCK_CASES[caseId] : null;
   if (!c) return (

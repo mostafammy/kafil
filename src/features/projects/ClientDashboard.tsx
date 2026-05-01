@@ -260,8 +260,21 @@ export default function ClientDashboard() {
               className="bg-blue-50 border border-blue-200 px-3 py-3 rounded-2xl flex items-center gap-2 hover:bg-blue-100 transition-colors h-14"
             >
                <Shield size={16} className="text-blue-600" />
-               <span className="text-xs font-bold text-blue-800">
+               <span className="text-xs font-black text-blue-800">
                  {lang === 'ar' ? 'دليل الأمان' : 'Safety Guide'}
+               </span>
+            </button>
+            <button 
+              onClick={() => {
+                api.resetDb();
+                window.location.reload();
+              }}
+              className="bg-emerald-50 border border-emerald-200 px-3 py-3 rounded-2xl flex items-center gap-2 hover:bg-emerald-100 transition-colors h-14"
+              title="إعادة ضبط البيانات إلى الوضع الافتراضي (Hackathon Demo)"
+            >
+               <TrendingUp size={16} className="text-emerald-600" />
+               <span className="text-xs font-black text-emerald-800">
+                 {lang === 'ar' ? 'بيانات تجريبية' : 'Demo Data'}
                </span>
             </button>
           </div>
@@ -428,12 +441,23 @@ export default function ClientDashboard() {
                 <p className="mb-2 text-lg font-bold text-gray-400">
                   {lang === 'ar' ? 'لا توجد مشاريع بعد.' : 'No projects yet.'}
                 </p>
-                <button
-                  onClick={() => setIsCreateModalOpen(true)}
-                  className="font-bold text-[var(--color-kafil-gold)] hover:underline focus:ring-2 focus:ring-[var(--color-kafil-gold)] focus:outline-none"
-                >
-                  {lang === 'ar' ? 'ابدأ بإنشاء مشروعك الأول' : 'Start by creating your first project'}
-                </button>
+                <div className="flex flex-col items-center gap-3">
+                  <button
+                    onClick={() => setIsCreateModalOpen(true)}
+                    className="font-bold text-[var(--color-kafil-midnight)] bg-[var(--color-kafil-gold)] px-6 py-2 rounded-xl shadow-lg hover:scale-105 transition-transform"
+                  >
+                    {lang === 'ar' ? 'ابدأ بإنشاء مشروعك الأول' : 'Start by creating your first project'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      api.resetDb();
+                      window.location.reload();
+                    }}
+                    className="text-sm font-bold text-gray-400 hover:text-[var(--color-kafil-midnight)] transition-colors"
+                  >
+                    {lang === 'ar' ? 'أو قم بتحميل البيانات التجريبية (عمر، طارق...)' : 'Or load demo data (Omar, Tariq...)'}
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="grid gap-6 lg:grid-cols-2" role="list">

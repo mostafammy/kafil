@@ -18,7 +18,7 @@ export const DemoGuide = () => {
   if (location.pathname === '/' || location.pathname === '/login') return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-[100] font-sans" dir="rtl">
+    <div className="fixed bottom-32 left-10 z-[100] font-sans" dir="rtl">
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -51,8 +51,31 @@ export const DemoGuide = () => {
                  );
               })}
             </div>
-            <div className="mt-4 pt-3 border-t border-gray-100 text-center">
-               <p className="text-[10px] text-gray-400 font-bold">يمكنك التنقل بين الصلاحيات من الشريط العلوي</p>
+            <div className="mt-4 pt-3 border-t border-gray-100">
+               <p className="text-[10px] text-gray-400 font-black mb-3 text-center uppercase tracking-wider">التبديل السريع بين الأدوار (Switch Role)</p>
+               <div className="flex gap-2">
+                 <button 
+                   onClick={() => {
+                     const user = { id: 'user_client_1', role: 'client', name: 'أحمد خالد', username: 'ahmed_k' };
+                     localStorage.setItem('user', JSON.stringify(user));
+                     window.location.href = '/dashboard/client';
+                   }}
+                   className="flex-1 bg-blue-50 text-blue-700 py-2 rounded-xl text-[10px] font-black border border-blue-100 hover:bg-blue-100 transition-all"
+                 >
+                   أحمد (Client)
+                 </button>
+                 <button 
+                   onClick={() => {
+                     const user = { id: 'user_freelancer_1', role: 'freelancer', name: 'عمر العلي', username: 'omar_dev' };
+                     localStorage.setItem('user', JSON.stringify(user));
+                     window.location.href = '/dashboard/freelancer';
+                   }}
+                   className="flex-1 bg-purple-50 text-purple-700 py-2 rounded-xl text-[10px] font-black border border-purple-100 hover:bg-purple-100 transition-all"
+                 >
+                   عمر (Freelancer)
+                 </button>
+               </div>
+               <p className="text-[9px] text-gray-400 mt-2 text-center">البيانات ستبقى محفوظة محلياً عند التبديل</p>
             </div>
           </motion.div>
         )}

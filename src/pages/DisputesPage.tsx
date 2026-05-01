@@ -40,16 +40,25 @@ export default function DisputesPage() {
   // Compute disputes based on the logged in user
   const myDisputes = projects.flatMap(p => 
     p.tasks.filter(t => t.status === 'Disputed').map(t => {
-       // Is the user the client or freelancer?
-       let myRole = '';
-       let against = '';
-       if (p.ownerId === user.id) {
-         myRole = 'requester';
-         against = t.assignedToName || t.assignedTo;
-       } else if (t.assignedTo === user.id) {
-         myRole = 'respondent';
-         against = p.owner;
-       } else if (user.role === 'admin' || user.role === 'arbitrator') {
+        const uId = (user.id || '').toLowerCase();
+        const uEmail = (user.email || '').toLowerCase();
+        const uName = (user.username || '').toLowerCase();
+
+        let myRole = '';
+        let against = '';
+        
+        const isOwner = p.ownerId === uId || p.ownerId === uEmail || p.ownerId === uName;
+        const assigned = (t.assignedTo || '').toLowerCase();
+        const assignedEmail = (t.assignedToEmail || '').toLowerCase();
+        const isAssigned = assigned === uId || assigned === uEmail || assigned === uName || assignedEmail === uEmail;
+
+        if (isOwner) {
+          myRole = 'requester';
+          against = t.assignedToName || t.assignedTo;
+        } else if (isAssigned) {
+          myRole = 'respondent';
+          against = p.owner;
+        } else if (user.role === 'admin' || user.role === 'arbitrator') {
          myRole = 'admin';
          against = `${p.owner} vs ${t.assignedToName || t.assignedTo}`;
        } else {

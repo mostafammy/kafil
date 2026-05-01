@@ -83,22 +83,34 @@ export const api = {
     return getDb().projects;
   },
 
-  /** Returns only projects owned by a specific user ID */
+  /** Returns only projects owned by a specific user ID/Username/Email */
   getProjectsByOwner: async (ownerId: string): Promise<Project[]> => {
-    return getDb().projects.filter((p) => p.ownerId === ownerId);
+    const db = getDb();
+    const user = db.users.find(u => u.id === ownerId || u.email === ownerId || u.username === ownerId);
+    if (!user) return db.projects.filter(p => p.ownerId === ownerId);
+    return db.projects.filter((p) => p.ownerId === user.id || p.ownerId === user.email || p.ownerId === user.username);
   },
 
   /** Returns projects where a user has at least one accepted/pending task */
   getProjectsForFreelancer: async (userId: string): Promise<Project[]> => {
     const db = getDb();
-    const user = db.users.find((u) => u.id === userId);
+    const user = db.users.find((u) => u.id === userId || u.email === userId || u.username === userId);
     if (!user) return [];
+    
+    const uId = user.id.toLowerCase();
+    const uEmail = user.email.toLowerCase();
+    const uName = user.username.toLowerCase();
+
     return db.projects.filter((p) =>
       p.tasks.some(
-        (t) =>
-          t.assignedTo === userId ||
-          (user.email && t.assignedToEmail?.toLowerCase() === user.email.toLowerCase()) ||
-          (t.assignedTo?.toLowerCase() === user.email?.toLowerCase())
+        (t) => {
+          const assigned = (t.assignedTo || '').toLowerCase();
+          const assignedEmail = (t.assignedToEmail || '').toLowerCase();
+          return assigned === uId || 
+                 assigned === uEmail || 
+                 assigned === uName || 
+                 assignedEmail === uEmail;
+        }
       )
     );
   },

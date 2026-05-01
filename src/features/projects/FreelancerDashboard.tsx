@@ -165,7 +165,15 @@ export default function FreelancerDashboard() {
 
     projects.forEach(p => {
       p.tasks.forEach(t => {
-        const isMatch = t.assignedTo === user.id || (user.email && t.assignedToEmail?.toLowerCase() === user.email.toLowerCase());
+        const uId = (user.id || '').toLowerCase();
+        const uEmail = (user.email || '').toLowerCase();
+        const uName = (user.username || '').toLowerCase();
+        
+        const assigned = (t.assignedTo || '').toLowerCase();
+        const assignedEmail = (t.assignedToEmail || '').toLowerCase();
+        
+        const isMatch = assigned === uId || assigned === uEmail || assigned === uName || assignedEmail === uEmail;
+
         if (isMatch) {
           if (t.inviteStatus === 'Pending') {
             invites.push({

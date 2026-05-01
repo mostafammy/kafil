@@ -4,7 +4,6 @@ import { AnimatePresence } from 'framer-motion';
 import Layout from '@/layouts/MainLayout';
 import { User } from '@/types';
 import { LanguageProvider } from '@/shared/context/LanguageContext';
-import { DemoStoryRunner } from '@/shared/components/fintech/DemoStoryRunner';
 
 // Lazy loading views for production optimization
 const Landing = lazy(() => import('@/pages/Landing'));
@@ -72,7 +71,6 @@ const App: FC = () => {
       <Router>
         <Suspense fallback={<LoadingFallback />}>
           <AnimatedRoutes />
-          <DemoStoryRunner />
         </Suspense>
       </Router>
     </LanguageProvider>

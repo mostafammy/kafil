@@ -163,6 +163,54 @@
           ]
         }
       ]
+    },
+    {
+      "id": "proj_dispute_demo",
+      "title": "تطبيق محفظة رقمية (نزاع تجريبي)",
+      "description": "مشروع لتطوير تطبيق محفظة رقمية واجه مشاكل في التسليم.",
+      "budget": 5000,
+      "owner": "أحمد خالد",
+      "ownerUsername": "ahmed_k",
+      "ownerId": "user_client_1",
+      "escrow": true,
+      "category": "핀테크 (Fintech)",
+      "createdAt": "2026-04-20",
+      "tasks": [
+        {
+          "id": "task_dispute_1",
+          "name": "تكامل بوابة الدفع",
+          "assignedTo": "user_freelancer_3",
+          "assignedToName": "ياسر سالم",
+          "payment": 2000,
+          "status": "Disputed",
+          "paymentStatus": "Disputed",
+          "paid": false,
+          "inviteStatus": "Accepted",
+          "deadline": "25 أبريل 2026",
+          "timeline": [
+            { "status": "Initiated", "timestamp": "2026-04-20T10:00:00Z" },
+            { "status": "Escrow Locked", "timestamp": "2026-04-20T10:05:00Z" },
+            { "status": "Disputed", "timestamp": "2026-04-26T14:30:00Z" }
+          ]
+        },
+        {
+          "id": "task_dispute_2",
+          "name": "نظام التحقق بخطوتين",
+          "assignedTo": "user_freelancer_1",
+          "assignedToName": "عمر العلي",
+          "payment": 1500,
+          "status": "Disputed",
+          "paymentStatus": "Disputed",
+          "paid": false,
+          "inviteStatus": "Accepted",
+          "deadline": "28 أبريل 2026",
+          "timeline": [
+            { "status": "Initiated", "timestamp": "2026-04-21T10:00:00Z" },
+            { "status": "Escrow Locked", "timestamp": "2026-04-21T10:05:00Z" },
+            { "status": "Disputed", "timestamp": "2026-04-29T09:15:00Z" }
+          ]
+        }
+      ]
     }
   ],
   "ledger": [

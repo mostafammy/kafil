@@ -10,6 +10,8 @@ import KafilLogo from '@/components/KafilLogo';
 import { User } from '@/types';
 import { cn } from '@/shared/utils/cn';
 import { DemoGuide } from '@/shared/components/DemoGuide';
+import { DemoStoryRunner } from '@/shared/components/fintech/DemoStoryRunner';
+import { api } from '@/services/api';
 import { toast } from 'sonner';
 import { useLanguage } from '@/shared/context/LanguageContext';
 import { translations } from '@/shared/translations';
@@ -223,9 +225,7 @@ const MainLayout: FC = () => {
             >
               <Gavel size={16} />
               {t.header.disputesShortcut}
-              <span className="bg-red-500 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center">
-                2
-              </span>
+              <DisputeBadge userId={user.id} />
             </Link>
 
             <button className="w-11 h-11 bg-white border border-[#E8DDD0] rounded-xl flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-all relative">
@@ -327,7 +327,42 @@ const MainLayout: FC = () => {
         </div>
       </main>
       <DemoGuide />
+      <DemoStoryRunner />
     </div>
+  );
+};
+
+const DisputeBadge: FC<{ userId: string }> = ({ userId }) => {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    api.getProjects().then(projs => {
+      api.getUsers().then(users => {
+        const user = users.find(u => u.id === userId);
+        if (!user) return;
+        const uId = (user.id || '').toLowerCase();
+        const uEmail = (user.email || '').toLowerCase();
+        const uName = (user.username || '').toLowerCase();
+
+        const disputes = projs.flatMap(p => 
+          p.tasks.filter(t => {
+            if (t.status !== 'Disputed') return false;
+            const isOwner = p.ownerId === uId;
+            const assigned = (t.assignedTo || '').toLowerCase();
+            const assignedEmail = (t.assignedToEmail || '').toLowerCase();
+            const isAssigned = assigned === uId || assigned === uEmail || assigned === uName || assignedEmail === uEmail;
+            return isOwner || isAssigned;
+          })
+        );
+        setCount(disputes.length);
+      });
+    });
+  }, [userId]);
+
+  if (count === 0) return null;
+  return (
+    <span className="bg-red-500 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center animate-pulse">
+      {count}
+    </span>
   );
 };
 

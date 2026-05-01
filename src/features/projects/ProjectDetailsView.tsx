@@ -91,48 +91,64 @@ const ProjectDetailsView: FC = () => {
         <div className="p-8">
           {/* Add Task Form */}
           {(userRole === 'client' || userRole === 'admin') && (
-            <form
-              onSubmit={actions.addTask}
-              className={cn("mb-10 flex flex-col items-end gap-3 rounded-2xl border border-[#E8DDD0] bg-gray-50/50 p-3 lg:flex-row", isRtl ? "flex-row" : "flex-row-reverse")}
-            >
-              <div className="w-full flex-1">
-                <input
-                  className={cn("w-full rounded-xl border-2 border-[#E8DDD0] bg-white p-4 font-medium outline-none focus:border-[#C9A84C]", isRtl ? "text-right" : "text-left")}
-                  placeholder={trans.addTask.taskName}
-                  value={form.name}
-                  onChange={(e) => form.setName(e.target.value)}
-                  required
-                />
+            <>
+              <form
+                onSubmit={actions.addTask}
+                className={cn("mb-10 flex flex-col items-end gap-3 rounded-2xl border border-[#E8DDD0] bg-gray-50/50 p-3 lg:flex-row", isRtl ? "flex-row" : "flex-row-reverse")}
+              >
+                <div className="w-full flex-1">
+                  <input
+                    className={cn("w-full rounded-xl border-2 border-[#E8DDD0] bg-white p-4 font-medium outline-none focus:border-[#C9A84C]", isRtl ? "text-right" : "text-left")}
+                    placeholder={trans.addTask.taskName}
+                    value={form.name}
+                    onChange={(e) => form.setName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="relative w-full lg:w-72">
+                  <input
+                    className={cn("w-full rounded-xl border-2 border-[#E8DDD0] bg-white p-4 font-medium outline-none focus:border-[#C9A84C]", isRtl ? "text-right" : "text-left")}
+                    placeholder={trans.addTask.freelancerEmail}
+                    value={form.freelancerQuery}
+                    onChange={(e) => form.lookupFreelancer(e.target.value)}
+                    required
+                  />
+                  {form.resolvedFreelancer && (
+                    <div className={cn("absolute top-1/2 -translate-y-1/2 rounded-lg bg-emerald-50 px-2 py-1 text-xs font-bold text-emerald-700", isRtl ? "left-3" : "right-3")}>
+                      <UserIcon size={10} /> {form.resolvedFreelancer.name}
+                    </div>
+                  )}
+                </div>
+                <div className="w-full lg:w-40">
+                  <input
+                    className="w-full rounded-xl border-2 border-[#E8DDD0] bg-white p-4 text-left font-medium outline-none focus:border-[#C9A84C]"
+                    dir="ltr"
+                    type="number"
+                    placeholder={trans.addTask.paymentAmount}
+                    value={form.payment}
+                    onChange={(e) => form.setPayment(e.target.value)}
+                    required
+                  />
+                </div>
+                <button disabled={stats.isLocking} className="flex items-center gap-2 rounded-xl bg-[#0D1B2A] px-6 py-4 font-bold text-white shadow-lg whitespace-nowrap disabled:opacity-75 transition-all focus:scale-95 active:scale-95" title="قفل الأموال (Lock Escrow Funds)">
+                  {stats.isLocking ? <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> {trans.addTask.locking}</> : <><Lock size={18} /> {trans.addTask.lockBtn}</>}
+                </button>
+              </form>
+              <div className={cn("mt-[-32px] mb-8 px-2 flex gap-3", isRtl ? "justify-start" : "justify-end")}>
+                 <button 
+                    type="button"
+                    onClick={() => {
+                      form.setName('UI/UX Design Phase');
+                      form.lookupFreelancer('omar_dev');
+                      form.setPayment('500');
+                    }}
+                    className="text-[10px] bg-blue-50 text-blue-600 px-3 py-1 rounded-full font-black border border-blue-100 hover:bg-blue-100 transition-all flex items-center gap-1 shadow-sm"
+                  >
+                     <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
+                     تعبئة سريعة (Omar)
+                  </button>
               </div>
-              <div className="relative w-full lg:w-72">
-                <input
-                  className={cn("w-full rounded-xl border-2 border-[#E8DDD0] bg-white p-4 font-medium outline-none focus:border-[#C9A84C]", isRtl ? "text-right" : "text-left")}
-                  placeholder={trans.addTask.freelancerEmail}
-                  value={form.freelancerQuery}
-                  onChange={(e) => form.lookupFreelancer(e.target.value)}
-                  required
-                />
-                {form.resolvedFreelancer && (
-                  <div className={cn("absolute top-1/2 -translate-y-1/2 rounded-lg bg-emerald-50 px-2 py-1 text-xs font-bold text-emerald-700", isRtl ? "left-3" : "right-3")}>
-                    <UserIcon size={10} /> {form.resolvedFreelancer.name}
-                  </div>
-                )}
-              </div>
-              <div className="w-full lg:w-40">
-                <input
-                  className="w-full rounded-xl border-2 border-[#E8DDD0] bg-white p-4 text-left font-medium outline-none focus:border-[#C9A84C]"
-                  dir="ltr"
-                  type="number"
-                  placeholder={trans.addTask.paymentAmount}
-                  value={form.payment}
-                  onChange={(e) => form.setPayment(e.target.value)}
-                  required
-                />
-              </div>
-              <button disabled={stats.isLocking} className="flex items-center gap-2 rounded-xl bg-[#0D1B2A] px-6 py-4 font-bold text-white shadow-lg whitespace-nowrap disabled:opacity-75 transition-all focus:scale-95 active:scale-95" title="قفل الأموال (Lock Escrow Funds)">
-                {stats.isLocking ? <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> {trans.addTask.locking}</> : <><Lock size={18} /> {trans.addTask.lockBtn}</>}
-              </button>
-            </form>
+            </>
           )}
 
           {/* Tasks List */}
