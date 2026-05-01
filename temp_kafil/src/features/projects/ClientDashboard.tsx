@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+// ... (rest of imports will be handled by the tool if I provide enough context)
 import { Link } from 'react-router-dom';
 import {
   Lock, CheckCircle, Briefcase, ChevronLeft, Wallet,
@@ -63,7 +64,10 @@ const DisputeModal = ({
   if (submitted) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(13,27,42,0.75)', backdropFilter: 'blur(6px)' }}>
-        <div className="bg-[#F9F4EE] w-full max-w-md rounded-3xl shadow-2xl p-8 text-center" dir="rtl">
+        <motion.div 
+          layoutId={`dispute-btn-${target.project.id}-${target.task.id}`}
+          className="bg-[#F9F4EE] w-full max-w-md rounded-3xl shadow-2xl p-8 text-center" dir="rtl"
+        >
           <div className="w-16 h-16 rounded-full bg-[#0D1B2A] flex items-center justify-center mx-auto mb-5">
             <Scale size={30} className="text-[#C9A84C]" />
           </div>
@@ -75,14 +79,17 @@ const DisputeModal = ({
             <p className="text-xs text-amber-600">تُستردّ كاملاً إذا صدر الحكم لصالحك.</p>
           </div>
           <button onClick={onClose} className="w-full py-3 rounded-xl font-black text-white" style={{ background: '#0D1B2A' }}>حسناً، فهمت</button>
-        </div>
+        </motion.div>
       </div>
     );
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(13,27,42,0.75)', backdropFilter: 'blur(6px)' }}>
-      <div className="bg-[#F9F4EE] w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl" dir="rtl">
+      <motion.div 
+        layoutId={`dispute-btn-${target.project.id}-${target.task.id}`}
+        className="bg-[#F9F4EE] w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl" dir="rtl"
+      >
 
         {/* Header */}
         <div className="bg-red-600 p-6 rounded-t-3xl flex items-start justify-between">
@@ -363,12 +370,13 @@ const ProjectCard = ({ p, onApprove, onDispute }: ProjectCardProps) => {
             </div>
             {!t.paid && (
               <div className="flex justify-end opacity-0 group-hover/task:opacity-100 transition-opacity duration-200">
-                <button
+                <motion.button
+                  layoutId={`dispute-btn-${p.id}-${t.id}`}
                   onClick={() => onDispute(p, t)}
                   className="flex items-center gap-1.5 text-[10px] font-black text-red-600 bg-red-50 border border-red-100 px-3 py-1.5 rounded-full hover:bg-red-100 hover:border-red-200 transition-all"
                 >
                   <Gavel size={11} /> فتح نزاع ضد {t.assignedTo}
-                </button>
+                </motion.button>
               </div>
             )}
           </div>
