@@ -161,13 +161,14 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             </div>
             {!t.paid && (
               <div className="flex justify-end opacity-0 transition-opacity duration-200 group-hover/task:opacity-100 focus-within:opacity-100">
-                <button
+                <motion.button
+                  layoutId={`dispute-btn-${p.id}-${t.id}`}
                   onClick={() => onDispute(p, t)}
                   className="flex items-center gap-1.5 rounded-full border border-red-100 bg-red-50 px-3 py-1.5 text-[10px] font-black text-red-600 transition-all hover:border-red-200 hover:bg-red-100 focus:ring-2 focus:ring-red-500 focus:outline-none"
                   aria-label={`فتح نزاع ضد ${t.assignedTo} لمهمة ${t.name}`}
                 >
                   <Gavel size={11} aria-hidden="true" /> فتح نزاع ضد {t.assignedTo}
-                </button>
+                </motion.button>
               </div>
             )}
           </div>
