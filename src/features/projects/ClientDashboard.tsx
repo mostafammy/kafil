@@ -69,21 +69,11 @@ export default function ClientDashboard() {
   
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
-  const [openingProjectId, setOpeningProjectId] = useState<string | null>(null);
   const [approveTarget, setApproveTarget] = useState<{ project: Project; task: Task } | null>(null);
   const [disputeTarget, setDisputeTarget] = useState<{ project: Project; task: Task } | null>(null);
   const containerRef = useRef(null);
-  const routeTimerRef = useRef<number | null>(null);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
-  useEffect(() => {
-    return () => {
-      if (routeTimerRef.current) {
-        window.clearTimeout(routeTimerRef.current);
-      }
-    };
-  }, []);
 
   // In production, use a dedicated useAuth() hook.
   const { data: user } = useQuery({
@@ -197,17 +187,11 @@ export default function ClientDashboard() {
   };
 
   const handleOpenProjectDetails = (projectId: string) => {
-    // Save scroll position precisely before animating out
+    // Save scroll position precisely before navigating
     sessionStorage.setItem('clientDashboardScroll', window.scrollY.toString());
-    setOpeningProjectId(projectId);
-
-    if (routeTimerRef.current) {
-      window.clearTimeout(routeTimerRef.current);
-    }
-
-    routeTimerRef.current = window.setTimeout(() => {
-      navigate(`/projects/${projectId}`);
-    }, 240);
+    
+    // We navigate immediately to allow Framer Motion layoutId to take over
+    navigate(`/projects/${projectId}`);
   };
 
   if (isError) {
@@ -470,8 +454,6 @@ export default function ClientDashboard() {
                     onApprove={handleApproveClick}
                     onDispute={(proj, task) => setDisputeTarget({ project: proj, task })}
                     onViewDetails={() => handleOpenProjectDetails(p.id)}
-                    isOpening={openingProjectId === p.id}
-                    isDimming={Boolean(openingProjectId) && openingProjectId !== p.id}
                   />
                 ))}
               </div>
@@ -484,20 +466,8 @@ export default function ClientDashboard() {
         </div>
       )}
 
-      <AnimatePresence>
-        {openingProjectId && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="fixed inset-0 z-40 bg-[rgba(13,27,42,0.12)] backdrop-blur-[3px]"
-            aria-hidden="true"
-          />
-        )}
-      </AnimatePresence>
-
       {/* Approve Modal */}
+
       <AnimatePresence>
         {approveTarget && (
           <ApproveModal

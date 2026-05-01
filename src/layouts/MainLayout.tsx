@@ -369,18 +369,9 @@ const MainLayout: FC = () => {
 
         <div className="relative flex-1 overflow-hidden bg-[#F9F4EE]">
           <LayoutGroup>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={location.pathname}
-                className="relative flex-1 h-full p-6 md:p-10 overflow-y-auto"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                {outlet}
-              </motion.div>
-            </AnimatePresence>
+            <div className="relative flex-1 h-full p-6 md:p-10 overflow-y-auto">
+              {outlet}
+            </div>
           </LayoutGroup>
         </div>
       </main>

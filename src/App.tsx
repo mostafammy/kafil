@@ -42,26 +42,110 @@ const AnimatedRoutes: FC = () => {
   return (
     <Routes location={location}>
       <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route element={<Layout />}>
-          <Route path="/dashboard/admin" element={<AdminDashboard />} />
-          <Route path="/dashboard/client" element={<ClientDashboard />} />
-          <Route path="/dashboard/freelancer" element={<FreelancerDashboard />} />
-          <Route path="/dashboard/coordinator" element={<CoordinatorDashboard />} />
-          <Route path="/arbitration" element={<ArbitratorDashboard />} />
-          <Route path="/dashboard" element={<DashboardRedirect />} />
-          <Route path="/create" element={<CreateProject />} />
-          <Route path="/projects/:id" element={<ProjectDetails />} />
-          <Route path="/dispute/:taskId" element={<DisputeFlow />} />
-          <Route path="/arbitrate/:caseId" element={<ArbitratorCaseView />} />
-          <Route path="/disputes" element={<DisputesPage />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/payment-methods" element={<PaymentMethods />} />
-        </Route>
-        {/* Catch-all route for 404 Not Found */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route element={<Layout />}>
+        <Route
+          path="/dashboard/admin"
+          element={
+            <Suspense fallback={<LoadingFallback />}>
+              <AdminDashboard />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/dashboard/client"
+          element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientDashboard />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/dashboard/freelancer"
+          element={
+            <Suspense fallback={<LoadingFallback />}>
+              <FreelancerDashboard />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/dashboard/coordinator"
+          element={
+            <Suspense fallback={<LoadingFallback />}>
+              <CoordinatorDashboard />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/arbitration"
+          element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ArbitratorDashboard />
+            </Suspense>
+          }
+        />
+        <Route path="/dashboard" element={<DashboardRedirect />} />
+        <Route
+          path="/create"
+          element={
+            <Suspense fallback={<LoadingFallback />}>
+              <CreateProject />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/projects/:id"
+          element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ProjectDetails />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/dispute/:taskId"
+          element={
+            <Suspense fallback={<LoadingFallback />}>
+              <DisputeFlow />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/arbitrate/:caseId"
+          element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ArbitratorCaseView />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/disputes"
+          element={
+            <Suspense fallback={<LoadingFallback />}>
+              <DisputesPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <Suspense fallback={<LoadingFallback />}>
+              <Settings />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/payment-methods"
+          element={
+            <Suspense fallback={<LoadingFallback />}>
+              <PaymentMethods />
+            </Suspense>
+          }
+        />
+      </Route>
+      {/* Catch-all route for 404 Not Found */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 };
 
@@ -69,12 +153,11 @@ const App: FC = () => {
   return (
     <LanguageProvider>
       <Router>
-        <Suspense fallback={<LoadingFallback />}>
-          <AnimatedRoutes />
-        </Suspense>
+        <AnimatedRoutes />
       </Router>
     </LanguageProvider>
   );
 };
+
 
 export default App;

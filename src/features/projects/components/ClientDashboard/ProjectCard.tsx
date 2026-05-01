@@ -12,8 +12,6 @@ interface ProjectCardProps {
   onApprove: (projectId: string, taskId: string) => void;
   onDispute: (project: Project, task: Task) => void;
   onViewDetails: () => void;
-  isOpening?: boolean;
-  isDimming?: boolean;
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -23,8 +21,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   onApprove,
   onDispute,
   onViewDetails,
-  isOpening = false,
-  isDimming = false,
 }) => {
   const pendingTask = p.tasks.find((t) => !t.paid && t.status === 'In Progress');
   const totalPaid = p.tasks.reduce((s, t) => (t.paid ? s + t.payment : s), 0);
@@ -37,32 +33,15 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
       layout
       layoutId={`project-card-${p.id}`}
       initial={{ opacity: 0, y: 20 }}
-      animate={
-        isOpening
-          ? {
-              scale: 1.035,
-              y: 0,
-              opacity: 1,
-              boxShadow: '0 40px 100px -20px rgba(13,27,42,0.35)',
-            }
-          : {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              boxShadow: '0 0 0 0 rgba(0,0,0,0)',
-            }
-      }
-      whileHover={isOpening ? undefined : { y: -5, scale: 1.01 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -5, scale: 1.01 }}
       transition={{
         type: 'spring',
         stiffness: 110,
         damping: 22,
         mass: 1.1,
-        opacity: { duration: 0.2 },
       }}
-      className={`group relative z-10 transform-gpu overflow-hidden rounded-[28px] border border-[var(--color-kafil-sand)] bg-white transition-all duration-500 ease-out hover:border-[var(--color-kafil-gold)]/50 hover:shadow-2xl ${
-        isOpening ? 'z-60' : ''
-      } ${isDimming ? 'pointer-events-none scale-[0.985] opacity-30 blur-[2px]' : ''}`}
+      className="group relative transform-gpu overflow-hidden rounded-[28px] border border-[var(--color-kafil-sand)] bg-white transition-all duration-500 ease-out hover:border-[var(--color-kafil-gold)]/50 hover:shadow-2xl"
       aria-labelledby={`project-title-${p.id}`}
     >
       {/* Card Header */}
