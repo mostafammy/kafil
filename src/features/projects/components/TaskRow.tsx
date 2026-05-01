@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { motion } from 'framer-motion';
 import { ShieldCheck, User, Gavel, CheckCircle2, Clock, Lock } from 'lucide-react';
 import { Task, Project } from '@/types';
 import { formatCurrency } from '@/shared/utils/format';
@@ -56,7 +57,7 @@ export const TaskRow: FC<TaskRowProps> = ({ t, project, onApprove, onAccept, onD
           <h3 className="font-bold text-gray-900 text-lg mb-1 leading-tight flex items-center gap-2">
             {t.name}
             <span className="flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-black text-emerald-600">
-              <Lock size={10} /> {tr.secured}
+              <span className="inline-flex items-center gap-1"><Lock size={10} /> {tr.secured}</span>
             </span>
           </h3>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
@@ -96,12 +97,13 @@ export const TaskRow: FC<TaskRowProps> = ({ t, project, onApprove, onAccept, onD
             </button>
           )}
           {!isPaid && !isDisputed && (userRole === 'client' || userRole === 'admin' || userRole === 'freelancer') && (
-            <button
+            <motion.button
+              layoutId={`dispute-btn-${project.id}-${t.id}`}
               onClick={(e) => { e.stopPropagation(); onDispute(t); }}
               className="flex items-center gap-2 text-red-600 font-bold px-4 py-2.5 rounded-xl text-sm border-2 border-red-100 bg-white hover:bg-red-50"
             >
               <Gavel size={15} /> {tr.openDispute}
-            </button>
+            </motion.button>
           )}
         </div>
       </div>
