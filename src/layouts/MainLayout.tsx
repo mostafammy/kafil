@@ -25,6 +25,24 @@ const MainLayout: FC = () => {
   const t = translations.layout[lang];
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
+  
+  // Sidebar state
+  const [isSidebarHovered, setIsSidebarHovered] = useState(false);
+  const sidebarHoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleSidebarMouseEnter = () => {
+    if (sidebarHoverTimeoutRef.current) clearTimeout(sidebarHoverTimeoutRef.current);
+    sidebarHoverTimeoutRef.current = setTimeout(() => {
+      setIsSidebarHovered(true);
+    }, 150); // Intent delay
+  };
+
+  const handleSidebarMouseLeave = () => {
+    if (sidebarHoverTimeoutRef.current) clearTimeout(sidebarHoverTimeoutRef.current);
+    sidebarHoverTimeoutRef.current = setTimeout(() => {
+      setIsSidebarHovered(false);
+    }, 150);
+  };
 
   const userStr = localStorage.getItem('user');
   const user: User = userStr ? JSON.parse(userStr) : { role: 'client', name: 'Guest', username: 'guest', id: '0' };
@@ -99,91 +117,131 @@ const MainLayout: FC = () => {
   return (
     <div className="min-h-screen flex font-sans text-gray-900" style={{ background: '#F9F4EE' }} dir={isRtl ? 'rtl' : 'ltr'}>
 
+      {/* ── SIDEBAR SPACER (Prevents layout shift) ── */}
+      <div className="hidden lg:block w-[64px] shrink-0 z-10" />
+
       {/* ── SIDEBAR ── */}
-      <aside className="w-72 bg-[#0D1B2A] hidden lg:flex flex-col sticky top-0 h-screen z-20">
-
-        {/* Logo */}
-        <div className="px-8 py-7 border-b border-white/5">
-          <Link to="/" className="hover:opacity-80 transition-opacity block">
-            <KafilLogo size="md" variant="dark" />
-          </Link>
-        </div>
-
-        {/* Nav sections */}
-        <nav className="flex-1 px-4 py-6 space-y-6 overflow-y-auto">
-          {menuSections.map(section => {
-            const visibleItems = section.items.filter(
-              item => !item.roles || item.roles.includes(user.role)
-            );
-            if (visibleItems.length === 0) return null;
-
-            return (
-              <div key={section.label}>
-                <p className={cn("text-[10px] font-black text-white/25 uppercase tracking-widest px-4 mb-2", isRtl ? "text-right" : "text-left")}>
-                  {section.label}
-                </p>
-                <div className="space-y-1">
-                  {visibleItems.map(item => {
-                    const isActive = location.pathname === item.path ||
-                      (item.path !== '/create' && location.pathname.startsWith(item.path) && item.path !== `/dashboard/${user.role}`);
-                    return (
-                      <Link
-                        key={item.path}
-                        to={item.path}
-                        className={cn(
-                          'flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-sm transition-all relative',
-                          isActive
-                            ? 'bg-[#C9A84C] text-[#0D1B2A] shadow-lg shadow-[#C9A84C]/20'
-                            : 'text-white/50 hover:bg-white/5 hover:text-white/80',
-                          isRtl ? "text-right" : "text-left"
-                        )}
-                      >
-                        <span className={isActive ? 'text-[#0D1B2A]' : 'text-white/40'}>
-                          {item.icon}
-                        </span>
-                        <span className="flex-1">{item.name}</span>
-                        {'badge' in item && item.badge && (
-                          <span className={cn(
-                            'w-5 h-5 rounded-full text-[10px] font-black flex items-center justify-center',
-                            isActive ? 'bg-[#0D1B2A] text-[#C9A84C]' : 'bg-red-500 text-white'
-                          )}>
-                            {item.badge}
-                          </span>
-                        )}
-                        {isActive && (
-                          <div className={cn("absolute top-1/2 -translate-y-1/2 w-1 h-6 bg-[#0D1B2A] rounded-full", isRtl ? "right-0" : "left-0")} />
-                        )}
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
-        </nav>
-
-        {/* Bottom: escrow card + logout */}
-        <div className="p-4 border-t border-white/5">
-          <div className="rounded-2xl p-5 mb-3 border border-[#C9A84C]/20" style={{ background: 'rgba(201,168,76,0.06)' }}>
-            <p className={cn("text-[10px] font-black text-[#C9A84C] uppercase tracking-widest mb-1", isRtl ? "text-right" : "text-left")}>
-              {t.header.escrowSystem}
-            </p>
-            <p className={cn("text-xs font-bold text-white/70 mb-3", isRtl ? "text-right" : "text-left")}>
-              {t.header.securedMsg}
-            </p>
-            <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-              <div className="bg-[#C9A84C] h-full w-full" />
-            </div>
+      <motion.aside 
+        className={cn(
+          "bg-[#0D1B2A]/95 backdrop-blur-2xl border-white/5 hidden lg:flex flex-col fixed top-0 h-screen z-50 overflow-hidden shadow-2xl",
+          isRtl ? "right-0 border-l" : "left-0 border-r"
+        )}
+        initial={{ width: 64 }}
+        animate={{ width: isSidebarHovered ? 288 : 64 }}
+        transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+        onMouseEnter={handleSidebarMouseEnter}
+        onMouseLeave={handleSidebarMouseLeave}
+      >
+        <div className="w-72 h-full flex flex-col">
+          {/* Logo */}
+          <div className="px-3 py-7 border-b border-white/5 flex items-center h-[90px] shrink-0">
+            <Link to="/" className="hover:opacity-80 transition-opacity block overflow-hidden">
+              <KafilLogo size="md" variant="dark" className="whitespace-nowrap" />
+            </Link>
           </div>
 
-          <button
-            onClick={handleLogout}
-            className={cn("w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-sm text-red-400 hover:bg-red-500/10 transition-all", !isRtl && "flex-row-reverse")}
-          >
-            <LogOut size={18} /> {t.header.logout}
-          </button>
+          {/* Nav sections */}
+          <nav className="flex-1 px-2 py-6 space-y-8 overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            {menuSections.map(section => {
+              const visibleItems = section.items.filter(
+                item => !item.roles || item.roles.includes(user.role)
+              );
+              if (visibleItems.length === 0) return null;
+
+              return (
+                <div key={section.label}>
+                  <motion.p 
+                    animate={{ opacity: isSidebarHovered ? 1 : 0 }}
+                    className={cn("text-[10px] font-black text-white/25 uppercase tracking-widest px-4 mb-3 whitespace-nowrap", isRtl ? "text-right" : "text-left")}
+                  >
+                    {section.label}
+                  </motion.p>
+                  <div className="space-y-2">
+                    {visibleItems.map(item => {
+                      const isActive = location.pathname === item.path ||
+                        (item.path !== '/create' && location.pathname.startsWith(item.path) && item.path !== `/dashboard/${user.role}`);
+                      return (
+                        <Link
+                          key={item.path}
+                          to={item.path}
+                          className={cn(
+                            'flex items-center gap-4 px-3 py-3 rounded-2xl font-bold text-sm transition-all relative whitespace-nowrap group mx-1',
+                            isActive
+                              ? 'bg-[#C9A84C] text-[#0D1B2A] shadow-lg shadow-[#C9A84C]/20'
+                              : 'text-white/50 hover:bg-white/10 hover:text-white',
+                            isRtl ? "text-right" : "text-left"
+                          )}
+                          title={!isSidebarHovered ? item.name : undefined}
+                        >
+                          <span className={cn('flex items-center justify-center shrink-0 w-6 h-6', isActive ? 'text-[#0D1B2A]' : 'text-white/40 group-hover:text-white transition-colors')}>
+                            {item.icon}
+                          </span>
+                          <motion.span 
+                            animate={{ opacity: isSidebarHovered ? 1 : 0 }}
+                            className="flex-1"
+                          >
+                            {item.name}
+                          </motion.span>
+                          {'badge' in item && item.badge && (
+                            <motion.span 
+                              animate={{ opacity: isSidebarHovered ? 1 : 0 }}
+                              className={cn(
+                                'w-5 h-5 rounded-full text-[10px] font-black flex items-center justify-center shrink-0',
+                                isActive ? 'bg-[#0D1B2A] text-[#C9A84C]' : 'bg-red-500 text-white'
+                              )}
+                            >
+                              {item.badge}
+                            </motion.span>
+                          )}
+                          {isActive && (
+                            <motion.div 
+                              layoutId={`active-nav-indicator-${item.path}`}
+                              className={cn("absolute top-1/2 -translate-y-1/2 w-1 h-6 bg-[#0D1B2A] rounded-full", isRtl ? "right-0" : "left-0")} 
+                            />
+                          )}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </nav>
+
+          {/* Bottom: escrow card + logout */}
+          <div className="p-2 py-4 border-t border-white/5 shrink-0">
+            <motion.div 
+              animate={{ opacity: isSidebarHovered ? 1 : 0, height: isSidebarHovered ? 'auto' : 0 }}
+              className="overflow-hidden"
+            >
+              <div className="rounded-2xl p-5 mb-4 border border-[#C9A84C]/20 bg-[#C9A84C]/5 whitespace-nowrap mx-1">
+                <p className={cn("text-[10px] font-black text-[#C9A84C] uppercase tracking-widest mb-1", isRtl ? "text-right" : "text-left")}>
+                  {t.header.escrowSystem}
+                </p>
+                <p className={cn("text-xs font-bold text-white/70 mb-3", isRtl ? "text-right" : "text-left")}>
+                  {t.header.securedMsg}
+                </p>
+                <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                  <div className="bg-[#C9A84C] h-full w-full" />
+                </div>
+              </div>
+            </motion.div>
+
+            <button
+              onClick={handleLogout}
+              title={!isSidebarHovered ? t.header.logout : undefined}
+              className={cn("w-full flex items-center gap-4 px-3 py-3 rounded-2xl font-bold text-sm text-red-400 hover:bg-red-500/10 transition-all whitespace-nowrap group mx-1")}
+            >
+              <div className="flex items-center justify-center shrink-0 w-6 h-6">
+                <LogOut size={20} className="group-hover:scale-110 transition-transform" /> 
+              </div>
+              <motion.span animate={{ opacity: isSidebarHovered ? 1 : 0 }} className={cn("flex-1", isRtl ? "text-right" : "text-left")}>
+                {t.header.logout}
+              </motion.span>
+            </button>
+          </div>
         </div>
-      </aside>
+      </motion.aside>
 
       {/* ── MAIN ── */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">

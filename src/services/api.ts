@@ -20,9 +20,10 @@ const getDb = (): Database => {
   const raw = localStorage.getItem(DB_KEY);
   if (!raw) {
     // First visit — seed from JSON file
-    const seed = SEED as Database;
+    // Handle potential default export in Vite
+    const seed = (SEED as any).default || SEED;
     localStorage.setItem(DB_KEY, JSON.stringify(seed));
-    return seed;
+    return seed as Database;
   }
   return JSON.parse(raw) as Database;
 };
@@ -50,10 +51,18 @@ const createTransaction = (
 /* ─── Lookup helpers ─── */
 
 const findUserByIdOrEmail = (db: Database, query: string): User | undefined => {
+  console.log("findUserByIdOrEmail -> db:", db);
+  console.log("findUserByIdOrEmail -> query:", query);
+  if (!db || !db.users) {
+    console.error("DB or db.users is missing!", db);
+    return undefined;
+  }
   const q = query.trim().toLowerCase();
-  return db.users.find(
+  const user = db.users.find(
     (u) => u.id === q || u.email.toLowerCase() === q || u.username.toLowerCase() === q
   );
+  console.log("findUserByIdOrEmail -> found user:", user);
+  return user;
 };
 
 /* ─── Public API ─── */
@@ -390,7 +399,8 @@ export const api = {
 
   /** Wipe runtime state and re-seed from db.json */
   resetDb: (): void => {
-    localStorage.setItem(DB_KEY, JSON.stringify(SEED as Database));
+    const seed = (SEED as any).default || SEED;
+    localStorage.setItem(DB_KEY, JSON.stringify(seed as Database));
   },
 
   /** Get all users (for admin views / invite lookups) */

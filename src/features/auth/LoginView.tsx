@@ -89,6 +89,9 @@ const Login: FC = () => {
   };
 
   const handleMockUserSelect = (mockUser: any) => {
+    // Force reset the DB to ensure the user exists (great for demos/hackathons)
+    api.resetDb();
+    
     setEmail(mockUser.email);
     setPassword(mockUser.password);
     handleLogin(undefined, mockUser.email);
