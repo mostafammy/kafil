@@ -76,9 +76,11 @@ const PaymentMethodsView: FC = () => {
         </div>
         <motion.button 
           layoutId="add-card-btn"
-          transition={{ type: 'spring', stiffness: 180, damping: 25 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 30, mass: 0.8 }}
+          whileHover={{ scale: 1.02, y: -2 }}
+          whileTap={{ scale: 0.97 }}
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 bg-[#C9A84C] text-[#0D1B2A] font-black px-6 py-3.5 rounded-2xl shadow-lg shadow-[#C9A84C]/20 hover:scale-105 transition-all"
+          className="flex items-center gap-2 bg-[#C9A84C] text-[#0D1B2A] font-black px-6 py-3.5 rounded-2xl shadow-lg shadow-[#C9A84C]/20"
         >
           <Plus size={20} /> إضافة بطاقة جديدة
         </motion.button>
@@ -225,30 +227,33 @@ const PaymentMethodsView: FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
               onClick={() => setShowAddModal(false)}
-              className="fixed inset-0 z-40 bg-[rgba(13,27,42,0.75)] backdrop-blur-sm"
+              className="fixed inset-0 z-40 bg-[#0D1B2A]/80 backdrop-blur-md"
             />
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
               <motion.div 
                 layoutId="add-card-btn"
-                transition={{ type: 'spring', stiffness: 180, damping: 25 }}
-                className="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden pointer-events-auto origin-center"
+                transition={{ type: 'spring', stiffness: 300, damping: 30, mass: 0.8 }}
+                className="bg-white w-full max-w-lg rounded-[2.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] overflow-hidden pointer-events-auto"
                 role="dialog"
               >
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
                 >
-                  <header className="bg-[#0D1B2A] p-8 text-white relative">
-                    <button 
+                  <header className="bg-[#0D1B2A] p-10 text-white relative">
+                    <motion.button 
+                      whileHover={{ scale: 1.1, rotate: 90 }}
+                      whileTap={{ scale: 0.9 }}
                       onClick={() => setShowAddModal(false)}
-                      className="absolute top-8 left-8 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
+                      className="absolute top-8 left-8 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md border border-white/10 transition-colors hover:bg-white/20"
                     >
                       <Plus className="rotate-45" size={20} />
-                    </button>
-                    <h2 className="text-2xl font-black mb-1">إضافة بطاقة بنكية</h2>
+                    </motion.button>
+                    <h2 className="text-3xl font-black mb-1">إضافة بطاقة بنكية</h2>
                     <p className="text-gray-400 text-sm font-medium">بياناتك محمية بتشفير من المستوى البنكي.</p>
                   </header>
                   
@@ -282,11 +287,13 @@ const PaymentMethodsView: FC = () => {
                       </div>
                     </div>
 
-                    <button 
-                      className="w-full bg-[#0D1B2A] text-white font-black py-5 rounded-2xl hover:-translate-y-0.5 transition-all shadow-xl flex items-center justify-center gap-2 text-lg"
+                    <motion.button 
+                      whileHover={{ scale: 1.01, y: -4 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full bg-[#0D1B2A] text-white font-black py-5 rounded-2xl shadow-xl flex items-center justify-center gap-2 text-lg"
                     >
                       <ShieldCheck size={22} className="text-[#C9A84C]" /> تأمين وحفظ البطاقة
-                    </button>
+                    </motion.button>
                   </div>
                 </motion.div>
               </motion.div>
