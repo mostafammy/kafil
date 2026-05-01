@@ -1,37 +1,147 @@
-# Kafeel Platform - Production Build
+# Kafil (كفيل) — Escrow & Community Arbitration for Arab Freelancers
 
-Kafeel is a client-freelancer Escrow protection platform, completely prepared as a production-ready application.
+Kafil is a production-ready fintech web experience that makes trust visible in the Arab freelance economy. It combines **milestone-based escrow**, **transparent project management**, and **community arbitration** with a premium, Apple-grade interface and bilingual RTL/LTR support.
 
-## Development
+## Table of Contents
+- [Overview](#overview)
+- [Why Kafil](#why-kafil)
+- [Key Features](#key-features)
+- [Product Tour (Roles)](#product-tour-roles)
+- [Demo Accounts](#demo-accounts)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Scripts](#scripts)
+- [Project Structure](#project-structure)
+- [Data & Persistence](#data--persistence)
+- [AI Arbitration Analyst](#ai-arbitration-analyst)
+- [Deployment](#deployment)
+- [Documentation](#documentation)
+- [Security & Privacy](#security--privacy)
+- [Contributing](#contributing)
+- [License](#license)
 
+## Overview
+Kafil is built for clients, freelancers, coordinators, and community arbitrators. It demonstrates:
+- A full **escrow lifecycle** from lock → milestone review → release.
+- **Dispute resolution** with AI-assisted fairness analysis.
+- **Role-based dashboards** with RTL-first Arabic UX.
+
+## Why Kafil
+- **Trust-first design**: escrow visibility is built into every workflow.
+- **Community arbitration**: disputes are resolved by verified peers, not opaque admin decisions.
+- **Localized experience**: Arabic-first UX with English toggle and typographic care.
+
+## Key Features
+- **Escrow ledger & money flow**: see locked vs. released funds per project.
+- **Milestone-based task tracking** with invite/accept/submit flows.
+- **Dispute center** with arbitration timelines and outcomes.
+- **AI fairness analyst** (Gemini) with structured, explainable output.
+- **Multi-role dashboards**: Admin, Client, Freelancer, Coordinator, Arbitrator.
+- **Cinematic landing page** with GSAP + Framer Motion choreography.
+- **Local-first demo data** using localStorage for instant, offline-ready evaluation.
+- **Performance-ready** with lazy-loaded routes and Vite production build.
+
+## Product Tour (Roles)
+- **Client**: create projects, lock escrow, approve milestones, raise disputes.
+- **Freelancer**: accept invites, deliver milestones, view payment timelines.
+- **Coordinator**: manage teams, oversee delivery, participate in arbitration.
+- **Admin**: platform-wide visibility and governance dashboards.
+- **Arbitrator**: review cases, vote, and earn rewards for accurate decisions.
+
+## Demo Accounts
+Use the built-in mock users from the login screen:
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Admin | admin@kafeel.com | 123456 |
+| Client | client1@kafeel.com | 123456 |
+| Freelancer | freelancer1@kafeel.com | 123456 |
+| Coordinator | coordinator1@kafeel.com | 123456 |
+
+## Tech Stack
+- **Frontend**: React 19 + TypeScript
+- **Build**: Vite 6
+- **Styling**: Tailwind CSS 4 + Prettier
+- **Data**: TanStack Query, localStorage-backed mock API
+- **Motion**: Framer Motion, GSAP, Lenis
+- **Icons**: Lucide
+- **AI**: Google Gemini (`@google/genai`)
+
+## Getting Started
 ```bash
 npm install
 npm run dev
 ```
+Open the Vite dev server URL (default: http://localhost:5173).
 
-## Production Configurations Included
-- **Vercel**: Included `vercel.json` for edge caching and React Router support.
-- **Netlify**: Included `public/_redirects` to handle React Router navigation boundaries.
-- **VPS (Nginx)**: Refer to `nginx.example.conf` for hosting securely on DigitalOcean, Linode, or AWS EC2.
+## Environment Variables
+Create a `.env` file (see `.env.example`):
 
-## How to Deploy to Vercel
+```
+VITE_GEMINI_API_KEY=your_api_key_here
+VITE_API_URL=http://localhost:3000
+```
 
-1. Push your code to a GitHub repository.
-2. Go to Vercel dashboard and click **Add New** -> **Project**.
-3. Import your GitHub repository.
-4. Framework Preset: **Vite**
-5. Click **Deploy**. Vercel will automatically read `vercel.json` and serve the application.
+`VITE_GEMINI_API_KEY` is optional. If omitted, the AI analyst returns a simulated arbitration response for demos.
 
-## How to Deploy to Netlify
+## Scripts
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start local dev server |
+| `npm run build` | Production build |
+| `npm run preview` | Preview production build |
+| `npm run lint` | Type check (tsc --noEmit) |
+| `npm run clean` | Remove build output |
 
-1. Push your code to GitHub.
-2. Form Netlify dashbaord, select **Add new site** -> **Import an existing project**.
-3. Connect your GitHub and select the repo.
-4. Build command: `npm run build`
-5. Publish directory: `dist`
-6. Click **Deploy site**. The `public/_redirects` file manages the 404 router limits automatically.
+## Project Structure
+```
+src/
+  features/   # Domain modules (auth, projects, escrow, dashboards)
+  shared/     # Shared UI, hooks, utilities, translations
+  layouts/    # App shell/layout wrappers
+  pages/      # Route-level pages
+  services/   # API + AI analyst service
+  data/       # Seed data (db.json)
+docs/         # Product, design, and architecture docs
+public/       # Static assets and redirects
+```
 
-## Performance optimizations included
-1. **Lazy Loading (`React.lazy`)**: The application leverages modular route splitting to only push JS that the user actually opens.
-2. **Local Storage Database Engine**: Removed hard dependencies from backend mock APIs to natively run as LocalStorage JSON for hackathon judges perfectly without backend downtime crashes.
-3. **Optimized Build configs**: Setup Vite build structure inside `package.json` with removed developer noise.
+## Data & Persistence
+Kafil runs fully in the browser using a **localStorage-backed mock API**.
+- Initial data is seeded from `src/data/db.json`.
+- State persists across reloads.
+- Use the **Factory Reset** button on the login screen to restore default data.
+
+## AI Arbitration Analyst
+The arbitration engine lives in `src/services/aiAnalyst.ts`:
+- Generates structured arbitration splits with confidence scores.
+- Falls back to a safe simulated response when no API key is set.
+- Designed for demo clarity and judge-friendly explainability.
+
+## Deployment
+Production-ready configs are included:
+- **Vercel**: `vercel.json` for routing + caching.
+- **Netlify**: `public/_redirects` for SPA routing.
+- **VPS / Nginx**: `nginx.example.conf`.
+
+Build command: `npm run build`  
+Output directory: `dist`
+
+## Documentation
+- **Docs index**: `docs/README.md`
+- **UI/UX spec**: `docs/design/ui-ux-spec.md`
+- **Architecture ADR**: `docs/architecture/adr-001-feature-structure.md`
+- **Business model**: `docs/BMC.md`
+- **Pitch script**: `docs/script.md`
+
+## Security & Privacy
+- This project is a **front-end prototype**. No real payments are processed.
+- All data stays in the browser unless a backend is added.
+- Keep API keys in `.env` only; do not commit secrets.
+
+## Contributing
+Pull requests are welcome. Please run `npm run lint` before submitting changes.
+
+## License
+License not specified. Please contact the maintainers for usage permissions.
