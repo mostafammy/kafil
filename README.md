@@ -50,14 +50,17 @@ Kafil is built for clients, freelancers, coordinators, and community arbitrators
 - **Arbitrator**: review cases, vote, and earn rewards for accurate decisions.
 
 ## Demo Accounts
-Use the built-in mock users from the login screen:
+Use the quick-select cards on the login screen to auto-fill demo access (recommended).  
+Seeded demo emails:
 
-| Role | Email | Password |
-| --- | --- | --- |
-| Admin | admin@kafeel.com | 123456 |
-| Client | client1@kafeel.com | 123456 |
-| Freelancer | freelancer1@kafeel.com | 123456 |
-| Coordinator | coordinator1@kafeel.com | 123456 |
+| Role | Email |
+| --- | --- |
+| Admin | admin@kafeel.com |
+| Client | client1@kafeel.com |
+| Freelancer | freelancer1@kafeel.com |
+| Coordinator | coordinator1@kafeel.com |
+
+> Note: Demo data is seeded from `src/data/db.json`, which uses the `kafeel.com` domain.
 
 ## Tech Stack
 - **Frontend**: React 19 + TypeScript
